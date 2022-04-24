@@ -26,14 +26,23 @@ ws.send(textutils.serializeJSON({
 
 local queue = {}
 
+local samples_i, samples_n = 1, 48000
+local samples = {}
+for i = 1, samples_n do samples[i] = 0 end
+
 local function playFirstInQueue()
   local current = queue[1]
   local now = os.epoch("utc")
   print("play audio", now - current.at)
   isFirstPacket = false
 
-  local audio = aukit.pcm(current.data, 8, "unsigned", 1, 48000):stream()
-  aukit.play(audio, peripheral.find("speaker"))
+  local ok, err = pcall(function()
+    local data = aukit.stream.pcm(current.data, 8, "unsigned", 1, 48000, false, true)
+    aukit.play(data, function() end, 10, peripheral.find("speaker"))
+  end)
+
+
+
   table.remove(queue, 1)
 end
 
@@ -81,7 +90,7 @@ end, function()
       if isFirstPacket and current.at < now and current.at + 1000 > now then
         playFirstInQueue()
         isFirstPacket = false
-      elseif not isFirstPacket then
+      elseif not isFirstPacket and current.at < now + 200 and current.at + 200 > now then
         playFirstInQueue()
       end
     end

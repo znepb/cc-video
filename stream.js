@@ -99,18 +99,13 @@ app.get("/play/:video", (req, res) => {
 
           if ((index + 10) % 20 === 0) {
             console.log("Send audio");
+            const ni = (index + 10) / 20;
 
-            sendSlice(
-              data.slice(((index + 10) / 20) * bpc, ((index + 30) / 20) * bpc),
-              at + 10 * 100
-            );
+            sendSlice(data.slice(ni * bpc, ni * bpc + bpc), at + 10 * 100);
           } else if (index === 0) {
             console.log("Send audio");
 
-            sendSlice(
-              data.slice((index / 20) * bpc, ((index + 20) / 20) * bpc),
-              at
-            );
+            sendSlice(data.slice(0, bpc), at);
           }
 
           index++;
