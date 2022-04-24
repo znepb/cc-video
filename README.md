@@ -4,6 +4,7 @@ This is a Node-JS app that converts videos into a playable format for ComputerCr
 
 ## Setup
 
+**Note:** You will require ffmpeg to convert & playback videos.
 Import a video file and run these commands:
 
 ```
